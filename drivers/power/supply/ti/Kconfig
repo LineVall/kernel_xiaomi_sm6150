@@ -23,4 +23,5 @@ config K9A_CHARGE
 	help
 		K9A special modify.
 
+
 endmenu
