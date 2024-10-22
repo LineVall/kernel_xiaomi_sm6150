@@ -2727,7 +2727,8 @@ static int qg_charge_full_update(struct qpnp_qg *chip)
 		 * force a recharge only if SOC <= recharge SOC and
 		 * we have not started charging.
 		 */
-		if (input_present && chip->msoc <= recharge_soc && chip->charge_status != POWER_SUPPLY_STATUS_CHARGING) {
+		if (input_present && chip->msoc <= recharge_soc &&
+				chip->charge_status != POWER_SUPPLY_STATUS_CHARGING) {
 			/* Force recharge */
 			prop.intval = 0;
 			rc = power_supply_set_property(chip->batt_psy,
@@ -3647,7 +3648,7 @@ static int qg_load_battery_profile(struct qpnp_qg *chip)
 			chip->batt_age_level = avail_age_level;
 		}
 	} else {
-	profile_node = of_batterydata_get_best_profile(batt_node,
+        	profile_node = of_batterydata_get_best_profile(batt_node,
 				chip->batt_id_ohm / 1000, NULL);
 	}
 
@@ -3657,6 +3658,7 @@ static int qg_load_battery_profile(struct qpnp_qg *chip)
 		return rc;
 	}
 #endif
+
 	rc = of_property_read_string(profile_node, "qcom,battery-type",
 				&chip->bp.batt_type_str);
 	if (rc < 0) {
@@ -4051,10 +4053,11 @@ use_pon_ocv:
 			calcualte_soc = DIV_ROUND_UP(((pon_soc - cutoff_soc) * 100),
 						(full_soc - cutoff_soc));
 			soc_raw = soc * 100;
-                } else {
+		} else {
 			calcualte_soc = pon_soc;
 			soc_raw = pon_soc * 100;
-                }
+		}
+//	}
 
 	if (use_pon_ocv == false) {
 		soc = calcualte_soc < shutdown[SDAM_SOC] ? (shutdown[SDAM_SOC] - 1) : shutdown[SDAM_SOC];
@@ -5553,7 +5556,6 @@ static int qpnp_qg_probe(struct platform_device *pdev)
 	memset(chip->ds_status, 0, 8);
 	memset(chip->ds_page0, 0, 16);
 	retry_batt_profile = 0;
-	//retry_battery_authentic_result = 0;
 	retry_ds_romid = 0;
 	retry_ds_status = 0;
 	retry_ds_page0 = 0;
