@@ -3177,14 +3177,6 @@ static int smb5_init_hw(struct smb5 *chip)
 	u8 val = 0, mask = 0;
 	union power_supply_propval pval;
 
-	if (hw_version == HARDWARE_PLATFORM_COURBET) {
-		rc = smblib_masked_write(chg, TYPE_C_TCCDEBOUNCE_CFG, TYPEC_TCCDEBOUNCE_TIMEOUT_SEL_MASK, 0);
-		if (rc < 0) {
-			dev_err(chg->dev,"Couldn't configure CC debounce timeout rc = %d\n", rc);
-			return rc;
-		}
-	}
-
 	if (chip->dt.no_battery)
 		chg->fake_capacity = 50;
 
