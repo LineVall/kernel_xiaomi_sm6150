@@ -220,8 +220,12 @@ static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
 
 static inline void bitmap_fill(unsigned long *dst, unsigned int nbits)
 {
-	unsigned int len = BITS_TO_LONGS(nbits) * sizeof(unsigned long);
-	memset(dst, 0xff, len);
+	if (small_const_nbits(nbits))
+		*dst = ~0UL;
+	else {
+		unsigned int len = BITS_TO_LONGS(nbits) * sizeof(unsigned long);
+		memset(dst, 0xff, len);
+	}
 }
 
 static inline void bitmap_copy(unsigned long *dst, const unsigned long *src,
