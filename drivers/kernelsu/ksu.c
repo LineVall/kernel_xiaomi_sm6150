@@ -4,6 +4,10 @@
 #include <linux/module.h>
 #include <linux/workqueue.h>
 
+#ifdef CONFIG_KSU_CMDLINE
+#include <linux/init.h>
+#endif
+
 #include "allowlist.h"
 #include "arch.h"
 #include "core_hook.h"
@@ -11,8 +15,19 @@
 #include "ksu.h"
 #include "throne_tracker.h"
 
-#ifdef CONFIG_KSU_SUSFS
-#include <linux/susfs.h>
+#ifdef CONFIG_KSU_CMDLINE
+unsigned int enable_kernelsu = 1;
+static int __init read_kernelsu_state(char *s)
+{
+	if (s)
+		enable_kernelsu = simple_strtoul(s, NULL, 0);
+	return 1;
+}
+__setup("kernelsu.enabled=", read_kernelsu_state);
+unsigned int get_ksu_state(void)
+{
+	return enable_kernelsu;
+}
 #endif
 
 static struct workqueue_struct *ksu_workqueue;
@@ -43,6 +58,13 @@ extern void ksu_ksud_exit();
 
 int __init kernelsu_init(void)
 {
+#ifdef CONFIG_KSU_CMDLINE
+	if (enable_kernelsu < 1) {
+		pr_info_once(" is disabled");
+		return 0;
+	}
+#endif
+
 #ifdef CONFIG_KSU_DEBUG
 	pr_alert("*************************************************************");
 	pr_alert("**     NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE    **");
@@ -51,10 +73,6 @@ int __init kernelsu_init(void)
 	pr_alert("**                                                         **");
 	pr_alert("**     NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE    **");
 	pr_alert("*************************************************************");
-#endif
-
-#ifdef CONFIG_KSU_SUSFS
-	susfs_init();
 #endif
 
 	ksu_core_init();
@@ -82,6 +100,11 @@ int __init kernelsu_init(void)
 
 void kernelsu_exit(void)
 {
+#ifdef CONFIG_KSU_CMDLINE
+	if (enable_kernelsu < 1)
+		return;
+#endif
+
 	ksu_allowlist_exit();
 
 	ksu_throne_tracker_exit();
@@ -103,6 +126,7 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("weishu");
 MODULE_DESCRIPTION("Android KernelSU");
 
+#include <linux/version.h>
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 0, 0)
 MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
 #endif

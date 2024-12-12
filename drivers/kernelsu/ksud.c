@@ -19,6 +19,8 @@
 #include <linux/types.h>
 #include <linux/uaccess.h>
 #include <linux/workqueue.h>
+#include <linux/input.h>
+#include <linux/ksu.h>
 
 #include "allowlist.h"
 #include "arch.h"
