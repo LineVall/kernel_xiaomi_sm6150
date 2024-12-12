@@ -72,6 +72,10 @@
 
 #include <trace/events/sched.h>
 
+#ifdef CONFIG_KSU
+#include <linux/ksu.h>
+#endif
+
 int suid_dumpable = 0;
 
 static LIST_HEAD(formats);

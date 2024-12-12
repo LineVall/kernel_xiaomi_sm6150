@@ -25,6 +25,10 @@
 #include <linux/susfs.h>
 #endif
 
+#ifdef CONFIG_KSU
+#include <linux/ksu.h>
+#endif
+
 /**
  * generic_fillattr - Fill in the basic attributes from the inode struct
  * @inode: Inode to use as the source
@@ -188,8 +192,8 @@ int vfs_statx(int dfd, const char __user *filename, int flags,
 		       AT_EMPTY_PATH | KSTAT_QUERY_FLAGS)) != 0)
 		return -EINVAL;
 
-   #ifdef CONFIG_KSU
-	ksu_handle_stat(&dfd, &filename, &flags);
+#ifdef CONFIG_KSU
+        ksu_handle_stat(&dfd, &filename, &flags);
 #endif
 	if (flags & AT_SYMLINK_NOFOLLOW)
 		lookup_flags &= ~LOOKUP_FOLLOW;
