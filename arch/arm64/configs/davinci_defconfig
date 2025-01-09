@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm64 4.14.353-openela Kernel Configuration
+# Linux/arm64 4.14.355-openela Kernel Configuration
 #
 CONFIG_ARM64=y
 CONFIG_64BIT=y
@@ -733,7 +733,7 @@ CONFIG_COREDUMP=y
 CONFIG_COMPAT=y
 CONFIG_KUSER_HELPERS=y
 CONFIG_COMPAT_VDSO=y
-CONFIG_CROSS_COMPILE_ARM32=""
+CONFIG_CROSS_COMPILE_COMPAT=""
 
 #
 # Power management options
@@ -1369,6 +1369,7 @@ CONFIG_NFC_NQ=y
 # CONFIG_LWTUNNEL is not set
 CONFIG_DST_CACHE=y
 CONFIG_GRO_CELLS=y
+# CONFIG_NET_SOCK_MSG is not set
 # CONFIG_NET_DEVLINK is not set
 CONFIG_MAY_USE_DEVLINK=y
 CONFIG_HAVE_EBPF_JIT=y
